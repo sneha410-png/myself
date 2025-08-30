@@ -1,0 +1,970 @@
+/* Basic Reset & Variables */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+:root {
+    --bg-color: #080808; /* Dark background */
+    --second-bg-color: #1f242d; /* Slightly lighter dark for sections */
+    --main-color: #00eeff; /* Cyan/Blue accent */
+    --text-color: #ededed;
+    --border-gradient-start: #00eeff; /* Adjust these for the glow */
+    --border-gradient-end: #da22ff; /* Adjust these for the glow */
+    --gradient-text-start: #00eeff; /* Gradient for text */
+    --gradient-text-end: #da22ff; /* Gradient for text */
+
+    /* New, smaller base font size */
+    font-size: 62.5%; /* This makes 1rem = 10px, easier to work with */
+}
+
+body {
+    background: var(--bg-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.5; /* Standard line height for readability */
+}
+
+/* Base section padding */
+section {
+    min-height: 100vh;
+    padding: 8rem 9% 2rem; /* Reduced top padding further */
+}
+
+/* Header */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem 9%; /* Reduced padding */
+    background: transparent;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    background: rgba(8, 8, 8, 0.7);
+    backdrop-filter: blur(10px);
+    transition: .5s;
+}
+
+/* Mobile Menu Icon */
+#menu-icon {
+    font-size: 3.6rem; /* Increased size for touch */
+    color: var(--text-color);
+    cursor: pointer;
+    display: none; /* Hidden on desktop */
+}
+
+.header.sticky {
+    border-bottom: .1rem solid rgba(255, 255, 255, .2);
+    background: var(--bg-color);
+}
+
+.logo {
+    font-size: 2rem; /* Kept logo size reasonable */
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 600;
+    cursor: default;
+    opacity: 0;
+    animation: slideRight 1s ease forwards;
+}
+
+.navbar {
+    /* Base styles for desktop */
+    display: flex;
+}
+
+.navbar a {
+    font-size: 1.6rem; /* Standard nav link size */
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 2.5rem;
+    transition: .3s;
+}
+
+.navbar a:hover,
+.navbar a.active {
+    color: var(--main-color);
+}
+
+/* Common Button Style */
+.btn {
+    display: inline-block;
+    padding: 1rem 2.8rem;
+    background: var(--main-color);
+    border-radius: .6rem;
+    box-shadow: 0 0 1rem var(--main-color);
+    font-size: 1.6rem;
+    color: var(--bg-color);
+    letter-spacing: .1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: .5s ease;
+}
+
+.btn:hover {
+    box-shadow: none;
+}
+
+/* Reusable Heading Style */
+.heading {
+    font-size: 4rem; /* Reduced main heading size */
+    text-align: center;
+    margin-bottom: 4rem; /* Reduced margin */
+    opacity: 0;
+    transform: translateY(-50px); /* Initial position for animation */
+    transition: opacity 1s ease, transform 1s ease;
+}
+
+.heading.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Gradient Text Effect */
+.text-gradient {
+    background: linear-gradient(to right, var(--gradient-text-start), var(--gradient-text-end));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: var(--main-color);
+}
+
+/* Home Section */
+.home {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem; /* Reduced gap */
+    padding-top: 10rem; /* Ensure enough space from header */
+}
+
+.home-content {
+    max-width: 600px;
+    opacity: 0; /* Initial hidden state for JS animation */
+    transform: translateY(-50px); /* Initial transform for slide-in */
+    transition: opacity 1s ease, transform 1s ease;
+}
+.home-content.animate { /* Triggered by JS */
+    opacity: 1;
+    transform: translateY(0);
+    animation: slideBottom 1s ease forwards; /* Use slideBottom keyframe */
+}
+
+.home-content h3 {
+    font-size: 2.5rem; /* Slightly larger for emphasis */
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.home-content h3:nth-of-type(2) {
+    margin-bottom: 0.5rem; /* Reduced margin */
+}
+
+.home-content h1 {
+    font-size: 4.8rem; /* Main name, still prominent but not huge */
+    font-weight: 700;
+    margin: -0.5rem 0 0.5rem; /* Adjusted vertical margin */
+}
+
+.home-content p {
+    font-size: 1.7rem; /* Standard body text size */
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+/* Social Media Links */
+.social-media {
+    margin-bottom: 2.5rem; /* Reduced margin */
+    display: flex;
+    gap: 0.8rem; /* Reduced gap */
+}
+
+.social-media a {
+    width: 3.5rem; /* Standard icon size */
+    height: 3.5rem; /* Standard icon size */
+    border: .15rem solid var(--main-color);
+    font-size: 1.8rem; /* Icon font size */
+    color: var(--main-color);
+    display: flex; /* Make it a flex container */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    border-radius: 50%;
+    position: relative; /* For the pseudo-element hover effect */
+    overflow: hidden; /* Ensure pseudo-element doesn't spill out */
+    z-index: 1; /* For stacking context with pseudo-element */
+}
+
+.social-media a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: var(--main-color);
+    transition: .5s ease;
+    z-index: -1;
+}
+
+.social-media a:hover::before {
+    width: 100%;
+}
+
+.social-media a:hover {
+    color: var(--bg-color);
+}
+
+/* Home Image and Glowing Frame */
+.home-img, .about-img {
+    width: 300px; /* Reduced to 300px */
+    height: 300px; /* Reduced to 300px */
+    position: relative;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0; /* Hidden by default for JS animation */
+    background: linear-gradient(
+        45deg,
+        var(--border-gradient-start),
+        var(--border-gradient-end),
+        var(--border-gradient-start)
+    );
+    background-size: 400% 400%;
+    box-shadow: 0 0 1.2rem var(--main-color), /* Slightly smaller glow */
+                inset 0 0 1.2rem var(--main-color);
+    animation: glowBorder 8s ease infinite, floatImage 4s ease-in-out infinite;
+}
+.home-img.animate__zoomIn, .about-img.animate__zoomIn {
+    animation: zoomIn 1s ease forwards, glowBorder 8s ease infinite, floatImage 4s ease-in-out infinite;
+}
+
+.circle-frame {
+    width: calc(100% - 1.2rem); /* Adjusted for new border thickness */
+    height: calc(100% - 1.2rem);
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-color);
+}
+.about-img .circle-frame {
+    background-color: var(--second-bg-color);
+}
+
+.home-img img, .about-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* About Section Styles */
+.about {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem; /* Reduced gap */
+    background: var(--second-bg-color);
+}
+
+.about-content {
+    max-width: 600px;
+    text-align: left;
+    opacity: 0; /* Hidden by default for JS animation */
+    transform: translateX(50px); /* Off-screen for slide-in */
+    transition: opacity 1s ease, transform 1s ease;
+}
+.about-content.animate {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.about-content h2 {
+    text-align: left;
+    margin-bottom: 2rem;
+}
+
+.about-content h3 {
+    font-size: 2.2rem; /* Consistent with home h3 but slightly smaller than main name */
+    margin-bottom: 1rem;
+}
+
+.about-content p {
+    font-size: 1.7rem; /* Standard body text size */
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+/* Services Section (Optional - if you add this to HTML) */
+.services {
+    background: var(--bg-color);
+}
+.services-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2.5rem; /* Reduced gap */
+}
+
+.services-box {
+    flex: 1 1 28rem; /* Adjusted for smaller cards, allows 3 per row roughly */
+    background: var(--second-bg-color);
+    padding: 2.5rem 1.5rem 3rem; /* Reduced padding */
+    border-radius: 1.5rem; /* Slightly smaller border radius */
+    text-align: center;
+    border: .2rem solid var(--second-bg-color);
+    opacity: 0; /* Hidden by default for JS animation */
+    transform: translateY(50px); /* Off-screen for slide-in */
+    transition: opacity 1s ease, transform 1s ease; /* Ensure transition exists */
+}
+.services-box.animate { /* Triggered by JS */
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.services-box:hover {
+    border-color: var(--main-color);
+    transform: scale(1.02);
+}
+
+.services-box i {
+    font-size: 5rem; /* Reduced icon size */
+    color: var(--main-color);
+}
+
+.services-box h3 {
+    font-size: 2.2rem; /* Reduced heading size */
+    margin-top: 1.2rem;
+    margin-bottom: 0.8rem;
+}
+
+.services-box p {
+    font-size: 1.6rem; /* Standard text size for cards */
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+/* Skills Section */
+.skills {
+    background: var(--second-bg-color);
+}
+.skills-container {
+    display: flex;
+    justify-content: center;
+    gap: 4rem; /* Reduced gap */
+    flex-wrap: wrap;
+}
+.skills-column {
+    flex: 1 1 45%;
+    max-width: 450px; /* Reduced max width */
+    opacity: 0; /* Base state for animation */
+    transition: opacity 1s ease, transform 1s ease; /* For initial fade-in */
+    padding: 2rem; /* Added padding for better inner spacing */
+    border-radius: 1rem; /* Rounded corners for the column */
+    background-color: var(--bg-color); /* Slightly darker background for columns */
+    box-shadow: 0 0 1rem rgba(0, 238, 255, 0.15); /* Subtle glow effect */
+}
+/* Triggered by JS to apply specific keyframe animations */
+.skills-column.animate-left {
+    animation: slideRight 1s ease forwards;
+}
+.skills-column.animate-right {
+    animation: slideLeft 1s ease forwards;
+}
+
+.skills-column h3 {
+    font-size: 2.4rem; /* Slightly larger heading for clarity */
+    margin-bottom: 2.5rem; /* Increased margin for separation */
+    text-align: center;
+    color: var(--main-color);
+    position: relative; /* For the underline effect */
+    padding-bottom: 0.5rem; /* Space for the pseudo-element underline */
+}
+
+/* Underline effect for skill column headings */
+.skills-column h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    height: 0.2rem;
+    background: linear-gradient(to right, var(--main-color), var(--border-gradient-end));
+    border-radius: 0.1rem;
+}
+
+
+/* Technical Skills (Progress Bars) */
+.skill-bar {
+    margin-bottom: 2.5rem; /* Increased margin for separation */
+}
+.skill-bar p {
+    font-size: 1.6rem; /* Increased font size for readability */
+    margin-bottom: 0.8rem; /* Increased margin */
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500; /* Slightly bolder text */
+    color: var(--text-color);
+}
+.skill-bar .bar {
+    height: 1rem; /* Slightly thicker bar for prominence */
+    background-color: rgba(255, 255, 255, 0.1); /* Lighter background for the empty bar */
+    border-radius: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 0 0.5rem rgba(0, 0, 0, 0.3); /* Inner shadow for depth */
+}
+.skill-bar .bar span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(to right, var(--main-color), var(--border-gradient-end)); /* Vibrant gradient for progress */
+    border-radius: 0.5rem;
+    width: 0%; /* Initial state for animation, JS will set the width */
+    transition: width 1.5s cubic-bezier(0.25, 0.1, 0.25, 1); /* Smoother animation curve */
+}
+
+
+/* Professional Skills (Radial Bars) */
+.radial-skills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2.5rem; /* Increased gap for better spacing */
+}
+.radial-bar {
+    width: 110px; /* Slightly larger size for better detail */
+    height: 110px; /* Slightly larger size */
+    position: relative;
+    background: var(--bg-color); /* Background for the radial bar container */
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0; /* Initial hidden state for JS animation */
+    transform: translateY(50px); /* Initial transform for slide-in */
+    transition: opacity 1s ease, transform 1s ease; /* Transition for the container */
+    transition-delay: var(--delay, 0s); /* For staggered animation via JS custom property */
+    box-shadow: 0 0 1rem rgba(0, 238, 255, 0.15); /* Subtle glow effect */
+}
+/* Triggered by JS */
+.radial-bar.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.radial-bar svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg); /* Start from the top */
+    z-index: 1; /* Ensure SVG is behind text */
+}
+.radial-bar svg circle {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.1); /* Lighter background stroke color */
+    stroke-width: 8; /* Slightly thicker stroke */
+    transform: translate(5px, 5px); /* Adjusted offset for 110px size and 8px stroke */
+    stroke-linecap: round;
+}
+.radial-bar svg circle.progress {
+    stroke: var(--main-color); /* Progress stroke color */
+    stroke-dasharray: 292.16; /* Circumference for r=46.5. (2 * PI * 46.5) */
+    stroke-dashoffset: 292.16; /* Initial state, full offset for animation, JS will set this */
+    transition: stroke-dashoffset 1.5s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.5s ease; /* Smoother animation curve for stroke */
+    opacity: 0; /* Hidden initially, JS will make it visible */
+    filter: drop-shadow(0 0 0.5rem var(--main-color)); /* Subtle glow for the progress line */
+}
+
+.radial-bar .text {
+    font-size: 1.8rem; /* Larger font size for better readability */
+    font-weight: 700; /* Bolder text */
+    color: var(--main-color);
+    position: relative;
+    z-index: 2;
+    margin-bottom: 0.5rem; /* Space between percentage and label */
+}
+.radial-bar .label {
+    position: relative; /* Changed to relative for z-index */
+    bottom: unset; /* Remove previous absolute positioning */
+    font-size: 1.2rem; /* Increased font size for readability */
+    font-weight: 400;
+    color: var(--text-color);
+    z-index: 2;
+    text-align: center; /* Ensure text is centered if it wraps */
+    line-height: 1.2;
+}
+
+
+/* Projects Section */
+.projects {
+    background: var(--bg-color);
+}
+.projects-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 3rem; /* Reduced gap */
+}
+
+.projects-box {
+    position: relative;
+    width: 30rem; /* Kept similar to services box max width */
+    height: 22rem; /* Reduced height */
+    border-radius: 1.5rem; /* Consistent border radius */
+    box-shadow: 0 0 0.8rem var(--main-color); /* Smaller shadow */
+    overflow: hidden;
+    opacity: 0; /* Hidden by default for JS animation */
+    transform: translateY(50px); /* Off-screen for slide-in */
+    transition: opacity 1s ease, transform 1s ease;
+}
+.projects-box.animate { /* Triggered by JS */
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.projects-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: .5s ease;
+    border-radius: 10px; /* From your previous CSS */
+    display: block; /* From your previous CSS */
+}
+
+.projects-box:hover img {
+    transform: scale(1.1);
+}
+
+.projects-layer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0,0,0,.1), var(--main-color));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 0 1.5rem; /* Reduced padding */
+    transform: translateY(100%); /* Initial state: hidden below */
+    transition: .5s ease;
+}
+.projects-box:hover .projects-layer {
+    transform: translateY(0); /* On hover: slide up */
+}
+
+.projects-layer h4 {
+    font-size: 2.5rem; /* Reduced heading size */
+    margin-bottom: 0.3rem; /* Reduced margin */
+}
+
+.projects-layer p {
+    font-size: 1.4rem; /* Reduced text size */
+    margin: 0.5rem 0 0.8rem; /* Reduced margin */
+}
+
+.projects-layer a {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 3.5rem; /* Smaller icon button */
+    height: 3.5rem; /* Smaller icon button */
+    background: var(--text-color);
+    border-radius: 50%;
+    color: var(--second-bg-color);
+    font-size: 1.8rem;
+}
+
+/* Contact Section */
+.contact {
+    background: var(--second-bg-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.contact-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align items to the top in the row */
+    flex-wrap: wrap;
+    gap: 4rem; /* Reduced gap */
+    width: 100%;
+    max-width: 1000px; /* Limit max width for readability */
+    margin-top: 2rem;
+}
+
+.contact-info {
+    flex: 1 1 45%; /* Allow it to take roughly half width */
+    max-width: 450px;
+    opacity: 0; /* Hidden by default for JS animation */
+    transform: translateX(-50px); /* Off-screen for slide-in */
+    transition: opacity 1s ease, transform 1s ease;
+}
+.contact-info.animate { /* Triggered by JS */
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.contact-info h3 {
+    font-size: 2.5rem; /* Reduced heading size */
+    margin-bottom: 1rem; /* Reduced margin */
+}
+
+.contact-info p {
+    font-size: 1.6rem; /* Standard text size */
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem; /* Reduced margin */
+    font-size: 1.6rem; /* Standard text size */
+    color: var(--text-color);
+}
+.contact-item i {
+    margin-right: 0.8rem; /* Reduced margin */
+    color: var(--main-color);
+    font-size: 1.6rem; /* Reduced icon size */
+}
+
+.contact-info .social-media.contact-social {
+    margin-top: 1.5rem; /* Reduced margin */
+    justify-content: flex-start; /* Align left */
+}
+.contact-info .social-media a {
+    width: 3rem; /* Smaller icons */
+    height: 3rem; /* Smaller icons */
+    font-size: 1.5rem; /* Smaller icon font size */
+}
+
+.contact-form {
+    flex: 1 1 45%; /* Allow it to take roughly half width */
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem; /* Reduced gap */
+    opacity: 0; /* Hidden by default for JS animation */
+    transform: translateX(50px); /* Off-screen for slide-in */
+    transition: opacity 1s ease, transform 1s ease;
+}
+.contact-form.animate { /* Triggered by JS */
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.contact-form .input-box {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem; /* Reduced gap */
+}
+.contact-form .input-box input,
+.contact-form textarea {
+    width: 100%; /* Take full width within its flex item */
+    padding: 1.2rem; /* Reduced padding */
+    font-size: 1.6rem; /* Standard input text size */
+    background: var(--bg-color);
+    border: .15rem solid var(--main-color); /* Slightly thinner border */
+    border-radius: .6rem;
+    color: var(--text-color);
+    resize: vertical; /* Allow vertical resize for textarea */
+}
+.contact-form textarea {
+    min-height: 120px; /* Minimum height for textarea */
+}
+
+.contact-form .btn {
+    align-self: flex-start; /* Align button to the left */
+    margin-top: 1rem; /* Reduced margin */
+    cursor: pointer;
+}
+
+/* Footer */
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 1.5rem 9%; /* Reduced padding */
+    background: var(--second-bg-color);
+    color: var(--text-color);
+    font-size: 1.4rem; /* Reduced font size */
+}
+
+
+/* Animations */
+@keyframes slideRight {
+    0% { transform: translateX(-100px); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideLeft {
+    0% { transform: translateX(100px); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideTop { /* Not directly used for content blocks anymore, but kept */
+    0% { transform: translateY(100px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+@keyframes slideBottom {
+    0% { transform: translateY(-100px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+@keyframes zoomIn {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+@keyframes floatImage {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-16px); } /* Slightly less float */
+    100% { transform: translateY(0); }
+}
+@keyframes glowBorder {
+    0% {
+        background-position: 0% 50%;
+        box-shadow: 0 0 1.2rem var(--border-gradient-start),
+                    inset 0 0 1.2rem var(--border-gradient-start); /* Consistent start color */
+    }
+    50% {
+        background-position: 100% 50%;
+        box-shadow: 0 0 2.5rem var(--border-gradient-end), /* Reduced glow spread */
+                    inset 0 0 2.5rem var(--border-gradient-end); /* Consistent end color */
+    }
+    100% {
+        background-position: 0% 50%;
+        box-shadow: 0 0 1.2rem var(--border-gradient-start),
+                    inset 0 0 1.2rem var(--border-gradient-start);
+    }
+}
+
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .header { padding: 0.8rem 5%; }
+    section { padding: 6rem 5% 2rem; }
+    .home-content h1 { font-size: 4.2rem; }
+    .home-content h3 { font-size: 2.2rem; }
+    .home-content p { font-size: 1.6rem; }
+    .home-img, .about-img { width: 280px; height: 280px; }
+    .heading { font-size: 3.5rem; margin-bottom: 3rem; }
+    .services-box { flex: 1 1 25rem; }
+    .projects-box { width: 28rem; height: 21rem; }
+    .contact-info, .contact-form { max-width: 450px; }
+
+    /* Skills specific */
+    .skills-column { max-width: 400px; padding: 1.8rem; }
+    .skills-column h3 { font-size: 2.2rem; margin-bottom: 2rem; }
+    .skill-bar p { font-size: 1.5rem; }
+    .radial-bar { width: 100px; height: 100px; }
+    .radial-bar svg circle { stroke-width: 7; }
+    .radial-bar svg circle.progress { stroke-dasharray: 292.16; } /* Consistent circumference */
+    .radial-bar .text { font-size: 1.6rem; }
+    .radial-bar .label { font-size: 1.1rem; }
+}
+
+@media (max-width: 991px) {
+    #menu-icon {
+        display: block; /* Show menu icon on smaller screens */
+    }
+    .navbar {
+        position: absolute;
+        top: 100%; /* Position below header */
+        left: 0;
+        width: 100%;
+        padding: 1rem 3%; /* Adjust padding */
+        background: var(--bg-color); /* Background for mobile menu */
+        border-top: .1rem solid rgba(255, 255, 255, .2);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.2);
+        display: none; /* Hidden by default */
+        flex-direction: column; /* Stack links vertically */
+        align-items: center; /* Center links */
+        transition: .3s ease;
+    }
+    .navbar.active {
+        display: flex; /* Show when active */
+    }
+    .navbar a {
+        display: block;
+        font-size: 2rem; /* Larger font for mobile links */
+        margin: 1.5rem 0; /* More spacing */
+        text-align: center;
+    }
+
+
+    .home, .about {
+        flex-direction: column-reverse;
+        text-align: center;
+        gap: 2.5rem;
+    }
+    .about {
+        flex-direction: column; /* Ensure about section image stays on top for mobile */
+    }
+    .home-content, .about-content {
+        max-width: 100%;
+        padding: 0 1.5rem;
+    }
+    .home-content h1 { font-size: 3.8rem; }
+    .home-content h3, .about-content h3 { font-size: 2rem; }
+    .home-content p, .about-content p { font-size: 1.5rem; }
+    .social-media { justify-content: center; }
+    .home-img, .about-img { width: 250px; height: 250px; }
+
+    .heading { font-size: 3rem; margin-bottom: 2.5rem; }
+    .about-content h2 { text-align: center; }
+
+    .services-container, .projects-container, .skills-container, .contact-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .services-box, .projects-box {
+        width: 100%;
+        max-width: 350px; /* Reduced max width for stacking */
+        height: auto; /* Allow height to adjust */
+    }
+    .projects-box { /* Specific adjustments for project box height on smaller screens */
+        height: 25rem; /* Give more height for content */
+    }
+
+    /* Skills specific */
+    .skills-column {
+        flex: 1 1 100%;
+        max-width: 400px; /* Reduced max width */
+        padding: 2rem; /* Ensure consistent padding */
+    }
+    .radial-skills { gap: 2rem; } /* Adjusted gap */
+    .radial-bar { width: 100px; height: 100px; } /* Consistent size */
+    .radial-bar svg circle { stroke-width: 7; } /* Consistent stroke */
+    .radial-bar svg circle.progress { stroke-dasharray: 292.16; } /* Consistent circumference */
+
+
+    .contact-info, .contact-form {
+        flex: 1 1 100%;
+        max-width: 400px;
+        text-align: center;
+    }
+    .contact-info .social-media.contact-social {
+        justify-content: center;
+    }
+    .contact-form .input-box {
+        flex-direction: column;
+        gap: 1.2rem;
+    }
+    .contact-form .btn {
+        align-self: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .header { flex-direction: row; align-items: center; justify-content: space-between; padding-bottom: 1rem; }
+    /* Menu icon now handles navbar display */
+    .navbar { /* Reset mobile specific width/flex for smaller screens */
+        padding: 1rem 5%;
+    }
+    .navbar a { margin: 1rem 0; font-size: 1.8rem;} /* Further adjustments for links */
+    section { padding-top: 60px; padding-bottom: 1.5rem; }
+    .home-img, .about-img { width: 220px; height: 220px; }
+    .btn { padding: 0.8rem 2rem; font-size: 1.5rem; }
+    .heading { font-size: 2.8rem; }
+    .projects-layer h4 { font-size: 2.2rem; }
+    .projects-layer p { font-size: 1.2rem; }
+    .projects-layer a { width: 3rem; height: 3rem; font-size: 1.6rem; }
+
+    /* Skills specific */
+    .skills-column h3 { font-size: 2rem; }
+    .skill-bar p { font-size: 1.4rem; }
+    .skill-bar .bar { height: 0.9rem; }
+    .radial-bar { width: 90px; height: 90px; } /* Slightly smaller for tighter screens */
+    .radial-bar svg circle { stroke-width: 6; } /* Adjusted stroke width */
+    .radial-bar svg circle.progress { stroke-dasharray: 282.74; /* Recalculate for r=45 (90/2) - (6/2) */
+                                     transform: translate(4.5px, 4.5px); /* Adjusted for 90px size and 6px stroke */ }
+    .radial-bar .text { font-size: 1.5rem; }
+    .radial-bar .label { font-size: 1rem; }
+}
+
+@media (max-width: 480px) {
+    .logo { font-size: 1.8rem; }
+    .navbar a { font-size: 1.6rem; margin: 0.8rem 0; } /* Even smaller for very small screens */
+    .home-content h1 { font-size: 3rem; }
+    .home-content h3, .about-content h3 { font-size: 1.8rem; }
+    .home-content p, .about-content p { font-size: 1.4rem; }
+    .social-media a { width: 3rem; height: 3rem; font-size: 1.4rem; }
+    .heading { font-size: 2.2rem; }
+    .services-box i { font-size: 4rem; }
+    .services-box h3 { font-size: 2rem; }
+
+    /* Skills specific */
+    .skills-column h3 { font-size: 1.8rem; }
+    .skill-bar p { font-size: 1.3rem; }
+    .radial-bar { width: 80px; height: 80px; } /* Even smaller for tiny screens */
+    .radial-bar svg circle { stroke-width: 5; } /* Adjusted stroke width */
+    .radial-bar svg circle.progress { stroke-dasharray: 251.32; /* Recalculate for r=39.5 (80/2) - (5/2) */
+                                     transform: translate(4px, 4px); /* Adjusted for 80px size and 5px stroke */ }
+    .radial-bar .text { font-size: 1.3rem; }
+    .radial-bar .label { font-size: 0.8rem; }
+
+    .contact-info h3 { font-size: 2.2rem; }
+    .contact-item { font-size: 1.4rem; }
+    .contact-item i { font-size: 1.4rem; }
+    .contact-form .input-box input,
+    .contact-form textarea { padding: 1rem; font-size: 1.4rem; }
+    .footer { font-size: 1.2rem; }
+}
+.skill-bar .bar span {
+    /* ... other styles ... */
+    width: 0%; /* Initial state for animation, JS will set the width */
+    transition: width 1.5s cubic-bezier(0.25, 0.1, 0.25, 1); /* Smoother animation curve */
+}
+
+
+.radial-bar svg circle.progress {
+    /* ... other styles ... */
+    stroke-dasharray: 292.16; /* Circumference for r=46.5. (2 * PI * 46.5) */
+    stroke-dashoffset: 292.16; /* Initial state, full offset for animation, JS will set this */
+    transition: stroke-dashoffset 1.5s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.5s ease; /* Smoother animation curve for stroke */
+    opacity: 0; /* Hidden initially, JS will make it visible */
+    filter: drop-shadow(0 0 0.5rem var(--main-color)); /* Subtle glow for the progress line */
+}
+/* skill bar के बाहरी container  */
+.skill-bar .bar {
+  width: 100%;
+  height: 6px;             /* चाहें तो मोटाई बदलें  */
+  background: #333;        /* बैकग्राउंड (अनभर हिस्सा) */
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+/* असली प्रोग्रेस  */
+.skill-bar .bar span {
+  display: block;
+  height: 100%;
+  width: 0;                /* JS या keyframes से बढ़ाएँगे  */
+  background: linear-gradient(90deg,
+              #00f0ff 0%,          /* cyan  */
+              #9b5cff 100%);       /* purple */
+  border-radius: 4px;
+  animation: fillBar 1.5s forwards; /* स्लाइड‑इन ऐनिमेशन */
+}
+
+/* keyframes जो span की width बढ़ाता है */
+@keyframes fillBar {
+  from { width: 0; }
+  to   { width: var(--target-width); }
+}
